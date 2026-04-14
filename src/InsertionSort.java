@@ -1,20 +1,21 @@
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class InsertionSort<T extends Comparable<T>> implements IOrdenador<T> {
     private int comparacoes;
-    private int movimentacoes;
+    private long movimentacoes;
     private double tempoOrdenacao;
     private double inicio;
 
     private double nanoToMilli = 1.0/1_000_000;
 
     @Override
-    public int getComparacoes() {
+    public long getComparacoes() {
         return comparacoes;
     }
 
     @Override
-    public int getMovimentacoes() {
+    public long getMovimentacoes() {
         return movimentacoes;
     }
 
@@ -59,4 +60,11 @@ public class InsertionSort<T extends Comparable<T>> implements IOrdenador<T> {
         terminar();
         return dadosOrdenados;
     }
+
+    @Override
+    public T[] ordenar(T[] dados, Comparator<T> comparador) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'ordenar'");
+    }
 }
+    
