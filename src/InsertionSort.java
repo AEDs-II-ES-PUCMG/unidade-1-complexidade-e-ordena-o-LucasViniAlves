@@ -1,20 +1,21 @@
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class InsertionSort<T extends Comparable<T>> implements IOrdenador<T> {
-    private int comparacoes;
-    private int movimentacoes;
+    private long comparacoes; // Alterado para long para bater com a interface
+    private long movimentacoes;
     private double tempoOrdenacao;
     private double inicio;
 
-    private double nanoToMilli = 1.0/1_000_000;
+    private double nanoToMilli = 1.0 / 1_000_000;
 
     @Override
-    public int getComparacoes() {
+    public long getComparacoes() {
         return comparacoes;
     }
 
     @Override
-    public int getMovimentacoes() {
+    public long getMovimentacoes() {
         return movimentacoes;
     }
 
@@ -23,21 +24,14 @@ public class InsertionSort<T extends Comparable<T>> implements IOrdenador<T> {
         return tempoOrdenacao;
     }
 
-    private void iniciar(){
+    private void iniciar() {
         this.comparacoes = 0;
         this.movimentacoes = 0;
         this.inicio = System.nanoTime();
     }
 
-    private void terminar(){
+    private void terminar() {
         this.tempoOrdenacao = (System.nanoTime() - this.inicio) * nanoToMilli;
-    }
-
-    private void swap(int x, int y, T[] vetor) {
-        T temp = vetor[x];
-        vetor[x] = vetor[y];
-        vetor[y] = temp;
-        movimentacoes+=3;
     }
 
     @Override
@@ -45,17 +39,51 @@ public class InsertionSort<T extends Comparable<T>> implements IOrdenador<T> {
         T[] dadosOrdenados = Arrays.copyOf(dados, dados.length);
         int tamanho = dadosOrdenados.length;
         iniciar();
+        
         for (int i = 1; i < tamanho; i++) {
             T temp = dadosOrdenados[i];
             int j = i - 1;
-            while (j >= 0 && dadosOrdenados[j].compareTo(temp) > 0) {
-                dadosOrdenados[j+1] = dadosOrdenados[j];
-                j--;
-                this.comparacoes++;
-                this.movimentacoes++;            
+            
+            while (j >= 0) {
+                this.comparacoes++; 
+                if (dadosOrdenados[j].compareTo(temp) > 0) {
+                    dadosOrdenados[j + 1] = dadosOrdenados[j];
+                    this.movimentacoes++;
+                    j--;
+                } else {
+                    break; 
+                }
             }
-            dadosOrdenados[j+1] = temp;
-        }	
+            dadosOrdenados[j + 1] = temp;
+            this.movimentacoes++; 
+        }
+        terminar();
+        return dadosOrdenados;
+    }
+
+    @Override
+    public T[] ordenar(T[] dados, Comparator<T> comparador) {
+        T[] dadosOrdenados = Arrays.copyOf(dados, dados.length);
+        int tamanho = dadosOrdenados.length;
+        iniciar();
+        
+        for (int i = 1; i < tamanho; i++) {
+            T temp = dadosOrdenados[i];
+            int j = i - 1;
+            
+            while (j >= 0) {
+                this.comparacoes++;
+                if (comparador.compare(dadosOrdenados[j], temp) > 0) {
+                    dadosOrdenados[j + 1] = dadosOrdenados[j];
+                    this.movimentacoes++;
+                    j--;
+                } else {
+                    break;
+                }
+            }
+            dadosOrdenados[j + 1] = temp;
+            this.movimentacoes++;
+        }
         terminar();
         return dadosOrdenados;
     }
